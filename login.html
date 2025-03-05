@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="login-container">
+    <form method="POST" action="{{ url_for('verify') }}" id="passwordForm">
+        <div class="password-display" id="passwordDisplay">****</div>
+        <input type="hidden" name="password" id="passwordInput">
+
+        <div class="numpad">
+            {% for i in range(1, 10) %}
+            <button type="button" class="numpad-button" data-value="{{ i }}">{{ i }}</button>
+            {% endfor %}
+            <button type="button" class="numpad-button" data-value="C">C</button>
+            <button type="button" class="numpad-button" data-value="0">0</button>
+            <button type="button" class="numpad-button" data-value="E">↵</button>
+        </div>
+    </form>
+</div>
+
+<script>
+let password = '';
+const maxLength = 4;
+
+document.querySelectorAll('.numpad-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const value = this.dataset.value;
+
+        if (value === 'C') {
+            password = '';
+        } else if (value === 'E') {
+            document.getElementById('passwordInput').value = password;
+            document.getElementById('passwordForm').submit();
+        } else if (password.length < maxLength) {
+            password += value;
+        }
+
+        document.getElementById('passwordDisplay').textContent = 
+            '*'.repeat(password.length) + 
+            '_'.repeat(Math.max(0, maxLength - password.length));
+    });
+});
+</script>
+{% endblock %}
